@@ -1,0 +1,35 @@
+enable
+configure terminal
+vtp mode off
+! VTP abdrehen, also keine automatische VLAN-Distribution erwartet
+vlan 2002
+    name ROUTING
+vlan 254
+    name MGMT
+vlan 2
+    name CLIENTS
+vlan 3
+    name ADMINCLIENTS
+vlan 4
+    name VOIP
+vlan 5
+    name PRINTER
+vlan 6
+    name ACCESSPOINTS
+vlan 200
+    name SERVER
+vlan 2001
+    name LINKNETZE
+end
+configure terminal
+interface vlan 2002
+    ip address 10.0.2.2 255.255.255.252
+    no shutdown
+exit
+
+
+interface Gi1/0/28
+    no switchport
+    ip address 10.255.1.6 255.255.255.252
+    no shutdown
+exit

@@ -1,0 +1,11 @@
+enable
+configure terminal
+no aaa new-model
+username nts password 7 Rfc2549!
+line vty 0 4
+login local
+transport input ssh
+ip domain-name test.diplomarbeit.com
+crypto key generate rsa 2048
+ip ssh time-out 60
+ip ssh authentication-retries 2
