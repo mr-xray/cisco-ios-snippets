@@ -1,0 +1,19 @@
+! B-SWA-001
+vlan 254
+name MGMT
+exit
+int vlan 254
+ip address 10.254.2.3 255.255.255.0
+no shut
+
+! B-SWA-002
+vlan 254
+name MGMT
+exit
+int vlan 254
+ip address 10.254.2.4 255.255.255.0
+no shut
+
+! A-SWC-001
+vlan 254
+name MGMT
