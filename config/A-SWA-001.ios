@@ -1,0 +1,17 @@
+enable
+configure terminal
+vlan 254 
+    name MGMT
+    end
+interface vlan 254
+    switchport access vlan 254
+    ip address 10.254.1.3 255.255.255.0
+    exit
+interface Gi1/0/47
+    switchport mode trunk
+    switchport access vlan 254
+    exit
+interface Gi1/0/48
+    switchport mode trunk
+    switchport access vlan 254
+    exit    

@@ -1,0 +1,43 @@
+enable
+configure terminal
+!configure port channel between Core 1 and Core 2
+interface port-channel 47
+    switchport
+    switchport mode trunk
+    exit
+interface range Gi1/0/47 - 48
+    channel-group 47 mode active
+    no shutdown
+    exit
+!configure vlan for layer 2 connectivity over port channel
+vlan 2002
+    name ROUTING
+    end
+interface vlan 2002
+    ip address 10.0.1.2 255.255.255.252
+    exit
+!configure interface for layer 3 connectivity to site B
+interface Te1/1/4
+    ip address 10.255.1.5 255.255.255.252
+    no shutdown
+!configure management vlan
+vlan 254 
+    name MGMT
+    end
+interface vlan 254
+    ip address 10.254.1.2 255.255.255.0
+    exit
+!configure interface for layer 2 connectivity to A-SWA-002
+interface Gi1/0/46
+    switchport mode trunk
+    switchport access vlan 254
+    no shutdown
+    exit
+
+!configure interface for layer 2 connectivity to A-SWA-001
+interface Gi1/0/45
+    switchport mode trunk
+    switchport access vlan 254
+    no shutdown
+    exit
+
