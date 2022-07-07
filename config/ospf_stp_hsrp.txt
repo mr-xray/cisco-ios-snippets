@@ -1,0 +1,60 @@
+! -------------------- ospf -----------------------------
+router ospf 1 
+    passive-interface default 
+    no passive-interface Vlan 2002
+    no passive-interface gi0/1/28 
+    ! oberen zwei Commands für jedes OSPF interface 
+interface gi1/0/x 
+    ip address <ip-address> <subnetmask>
+    ip ospf 1 area 0.0.0.0
+    !ip ospf cost <number>
+    ip ospf hello-interval 1
+    ip ospf dead-interval 4
+    ip ospf message-digest-key 1 md5 supersecure12345
+    ip ospf authentication message-digest
+    ip ospf network point-to-point
+
+interface loopback 10
+    ip address 10.255.255.x 255.255.255.255
+    ip ospf 1 area 0.0.0.0
+
+! show command
+show ip ospf 
+show ip ospf neighbor  
+! überall full/ - bei show neighbour 
+show ip route 
+! loopbacks 
+
+
+! ------------------- stp ------------------------------
+spanning-tree
+spanning-tree mode rstp 
+spanning-tree priority 0 
+! root 0
+! backup root 4096
+
+exit 
+show spanning-tree 
+
+! ------------------ hsrp --------------------------------
+! SWC-001
+int vlan 2
+    ip address <ip address> <mask>
+    standby version 2
+    standby 2 ip <virtual ip address> 
+    standby 2 preempt 
+    standby 2 preempt delay minimum 60   
+    standby 2 priority 110
+    standby 2 timers 1 3
+    standby 2 authentication md5 key-string supersecure12345
+
+! SWC-002
+int vlan 2
+    ip address <ip address> <mask>
+    standby version 2
+    standby 2 ip <virtual ip address> 
+    standby 2 preempt 
+    standby 2 preempt delay minimum 60   
+    standby 2 priority 90
+    standby 2 timers 1 3  
+    standby 2 authentication md5 key-string supersecure12345
