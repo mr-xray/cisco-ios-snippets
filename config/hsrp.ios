@@ -1,0 +1,74 @@
+interface Vlan2
+ ip address 10.2.1.2 255.255.255.0
+ standby version 2
+ standby 2 ip 10.2.1.254
+ standby 2 timers 1 3
+ standby 2 priority 90
+ standby 2 preempt delay minimum 60
+ standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0
+!
+interface Vlan3
+ ip address 10.3.1.2 255.255.255.0
+ standby version 2
+ no standby 2 ip 10.3.1.254
+ no standby 2 timers 1 3
+ no standby 2 priority 90
+ no standby 2 preempt delay minimum 60
+ no standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0
+!
+interface Vlan4
+ ip address 10.4.1.2 255.255.255.0
+ standby version 2
+ no standby 2 ip 10.4.1.254
+ no standby 2 timers 1 3
+ no standby 2 priority 90
+ no standby 2 preempt delay minimum 60
+ no standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0
+!
+interface Vlan5
+ ip address 10.5.1.2 255.255.255.0
+ standby version 2
+ no standby 2 ip 10.5.1.254
+ no standby 2 timers 1 3
+ no standby 2 priority 90
+ no standby 2 preempt delay minimum 60
+ no standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0
+!
+interface Vlan6
+ ip address 10.6.1.2 255.255.255.0
+ standby version 2
+ no standby 2 ip 10.6.1.254
+ no standby 2 timers 1 3
+ no standby 2 priority 90
+ no standby 2 preempt delay minimum 60
+ no standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0
+!
+interface Vlan88
+ no ip address
+ standby version 2
+ standby 2 preempt delay minimum 60
+!
+interface Vlan200
+ ip address 10.200.1.2 255.255.255.0
+ standby version 2
+ no standby 2 ip 10.200.1.254
+ no standby 2 timers 1 3
+ no standby 2 priority 90
+ no standby 2 preempt delay minimum 60
+ no standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0
+!
+interface Vlan254
+ ip address 10.254.1.2 255.255.255.0
+ standby version 2
+ standby 254 ip 15.254.1.254
+ no standby 2 timers 1 3
+ no standby 2 priority 90
+ no standby 2 preempt delay minimum 60
+ no standby 2 authentication md5 key-string supersecure12345
+ ip ospf 1 area 0.0.0.0

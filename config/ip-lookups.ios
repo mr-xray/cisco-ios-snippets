@@ -1,0 +1,24 @@
+int Vlan2
+    no ip proxy-arp
+    no ip redirects
+int Vlan3
+    no ip proxy-arp
+    no ip redirects
+int Vlan4
+    no ip proxy-arp
+    no ip redirects
+int Vlan5
+    no ip proxy-arp
+    no ip redirects
+int Vlan6
+    no ip proxy-arp
+    no ip redirects
+int Vlan200
+    no ip proxy-arp
+    no ip redirects
+int Vlan254
+    no ip proxy-arp
+    no ip redirects
+int Vlan2001
+    no ip proxy-arp
+    no ip redirects

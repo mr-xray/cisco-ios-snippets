@@ -1,0 +1,10 @@
+int Vlan2
+    ip helper-address 10.200.1.10
+int Vlan3
+    ip helper-address 10.200.1.10
+int Vlan4
+    ip helper-address 10.200.1.10
+int Vlan5
+    ip helper-address 10.200.1.10
+int Vlan6
+    ip helper-address 10.200.1.10

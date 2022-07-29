@@ -38,7 +38,7 @@ show spanning-tree
 
 ! ------------------ hsrp --------------------------------
 ! SWC-001
-int vlan 2
+int vlan 
     ip address <ip address> <mask>
     standby version 2
     standby 2 ip <virtual ip address> 
