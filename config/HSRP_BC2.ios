@@ -1,0 +1,14 @@
+interface Vlan4
+ no standby 2 preempt
+!
+interface Vlan5
+ no standby 2 preempt
+!
+interface Vlan6
+ no standby 2 preempt
+!
+interface Vlan200
+ no standby 2 preempt
+!
+interface Vlan254
+ no standby 2 preempt

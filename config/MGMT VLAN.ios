@@ -17,3 +17,7 @@ no shut
 ! A-SWC-001
 vlan 254
 name MGMT
+exit
+int vlan 254
+ip address 10.254.1.1 255.255.255.0
+no shut

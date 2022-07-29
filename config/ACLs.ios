@@ -1,0 +1,85 @@
+ip access-list standard VLAN254-OUT
+ permit 10.3.1.0 0.0.0.255
+ permit 10.3.2.0 0.0.0.255
+
+interface vlan254
+ ip access-group VLAN254-OUT out
+
+ip access-list extended VLAN200-OUT
+ permit udp 10.2.1.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.2.2.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.2.1.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.2.2.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.3.1.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.3.2.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.3.1.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.3.2.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.4.1.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.4.2.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.4.1.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.4.2.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.5.1.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.5.2.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.5.1.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.5.2.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.6.1.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.6.2.0 0.0.0.255 eq 68 host 10.200.1.10 eq 67
+ permit udp 10.6.1.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit udp 10.6.2.0 0.0.0.255 eq 68 host 10.200.2.10 eq 67
+ permit ip 10.3.1.0 0.0.0.255 any
+ permit ip 10.3.2.0 0.0.0.255 any
+
+interface vlan200
+ ip access-group VLAN200-OUT out
+
+ip access-list standard VTY-IN
+ permit 10.3.1.0 0.0.0.255
+ permit 10.3.2.0 0.0.0.255
+
+line vty 0 15
+ access-class VTY-IN in
+
+ip access-list extended VLAN2-A-IN
+ permit udp 10.2.1.0 0.0.0.255 eq 68 any eq 67
+ permit udp 10.2.1.0 0.0.0.255 any eq 53
+ permit tcp 10.2.1.0 0.0.0.255 any eq 53
+ deny ip any 10.1.1.0 0.7.0.255
+ deny ip any 10.1.2.0 0.7.0.255
+ permit ip 10.2.1.0 0.0.0.255 any
+
+interface vlan2
+ ip access-group VLAN2-A-IN in
+
+ip access-list extended VLAN2-B-IN
+ permit udp 10.2.2.0 0.0.0.255 eq 68 any eq 67
+ permit udp 10.2.2.0 0.0.0.255 any eq 53
+ permit tcp 10.2.2.0 0.0.0.255 any eq 53
+ deny ip any 10.1.2.0 0.7.0.255
+ permit ip 10.2.2.0 0.0.0.255 any
+
+interface vlan2
+ ip access-group VLAN2-B-IN in
+
+ip access-list extended VLAN7-A-IN
+ permit udp 10.7.1.0 0.0.0.255 eq 68 any eq 67
+ permit udp 10.2.2.0 0.0.0.255 any eq 53
+ permit tcp 10.2.2.0 0.0.0.255 any eq 53
+ deny ip any 10.1.1.0 0.7.0.255
+ deny ip any 10.1.2.0 0.7.0.255
+ permit ip 10.7.1.0 0.0.0.255 any
+
+interface vlan7
+ ip access-group VLAN7-A-IN in
+
+ip access-list extended VLAN7-B-IN
+ permit udp 10.7.2.0 0.0.0.255 eq 68 any eq 67
+ permit udp 10.2.2.0 0.0.0.255 any eq 53
+ permit tcp 10.2.2.0 0.0.0.255 any eq 53
+ deny ip any 10.1.1.0 0.7.0.255
+ deny ip any 10.1.2.0 0.7.0.255
+ permit ip 10.7.2.0 0.0.0.255 any
+
+interface vlan7
+ ip access-group VLAN7-B-IN in
+
+ip access-list 

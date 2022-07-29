@@ -1,0 +1,359 @@
+
+labgrz-asavpn01# more system:running-config
+: Saved
+
+hostname labgrz-asavpn01
+enable password password1234!
+
+names
+!no mac-address auto -> geht nicht 
+ip local pool POOL-VPN-NTS 10.7.1.1-10.7.1.240 mask 255.255.255.0
+
+
+interface GigabitEthernet1/1
+ nameif inside
+ security-level 100
+ ip address 10.255.1.18 255.255.255.252
+
+interface GigabitEthernet1/2
+ nameif outside
+ security-level 0
+ ip address 208.88.84.1 255.255.255.224 
+
+
+ftp mode passive
+same-security-traffic permit inter-interface
+same-security-traffic permit intra-interface
+object network net-10.7.1.0-24
+ subnet 10.7.1.0 255.255.255.0
+ description VPN-POOL
+object network net-10.2.1.0-24
+ subnet 10.2.1.0 255.255.255.0
+object network net-10.3.1.0-24
+ subnet 10.3.1.0 255.255.255.0
+object network net-10.4.1.0-24
+ subnet 10.4.1.0 255.255.255.0
+object network net-10.5.1.0-24
+ subnet 10.5.1.0 255.255.255.0
+object network net-10.6.1.0-24
+ subnet 10.6.1.0 255.255.255.0
+object network net-10.200.1.0-24
+ subnet 10.200.1.0 255.255.255.0
+object network net-10.254.1.0-24
+ subnet 10.254.1.0 255.255.255.0
+access-list ACL-LOCAL-LAN-ACCESS remark Client Local LAN Access
+access-list ACL-LOCAL-LAN-ACCESS standard permit host 0.0.0.0 
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.2.1.0-24
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.3.1.0-24 
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.4.1.0-24
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.5.1.0-24
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.6.1.0-24
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.200.1.0-24
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 object net-10.254.1.0-24
+access-list outside_access_in extended permit ip object net-10.7.1.0-24 any 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!route network gateway
+pager lines 24
+mtu inside 1500
+mtu outside 1500
+icmp unreachable rate-limit 1 burst-size 1
+asdm image disk0:/asdm-openjre-7171-152.bin
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+arp rate-limit 16384
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.2.1.0-24 net-10.2.1.0-24
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.3.1.0-24 net-10.3.1.0-24
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.4.1.0-24 net-10.4.1.0-24
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.5.1.0-24 net-10.5.1.0-24
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.6.1.0-24 net-10.6.1.0-24
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.200.1.0-24 net-10.200.1.0-24
+nat (outside,inside) source dynamic net-10.7.1.0-24 interface destination static net-10.254.1.0-24 net-10.254.1.0-24
+nat (outside,outside) source dynamic net-10.7.1.0-24 interface
+access-group outside_access_in in interface outside
+route outside 0.0.0.0 0.0.0.0 208.88.84.30 1
+route inside 10.2.1.0 255.255.255.0 10.255.1.17 1
+
+user-identity default-domain LOCAL
+aaa authentication ssh console LOCAL 
+aaa authentication http console LOCAL 
+aaa authentication enable console LOCAL 
+aaa authorization exec LOCAL 
+aaa authentication login-history
+http server enable
+http 193.109.88.0 255.255.255.0 outside
+http 0.0.0.0 0.0.0.0 inside
+http 185.119.119.174 255.255.255.255 outside
+no snmp-server location
+no snmp-server contact
+service sw-reset-button
+crypto ipsec security-association pmtu-aging infinite
+crypto ca trustpoint SELF_TRUSTPOINT
+ enrollment self
+ fqdn 62.218.50.170
+ subject-name cn=62.218.50.170
+ crl configure
+crypto ca trustpoint ntslab_jeitler_cc
+ keypair ntslab_jeitler_cc
+ crl configure
+crypto ca trustpool policy
+crypto ca certificate chain SELF_TRUSTPOINT
+ certificate 5dab4f9e
+    308204e8 308202d0 a0030201 020204a2 54b06230 0d06092a 864886f7 0d01010b 
+    05003036 31163014 06035504 03130d36 322e3231 382e3530 2e313730 311c301a 
+    06092a86 4886f70d 01090216 0d36322e 3231382e 35302e31 3730301e 170d3232 
+    30363230 31363035 31375a17 0d333230 36313731 36303531 375a3036 31163014 
+    06035504 03130d36 322e3231 382e3530 2e313730 311c301a 06092a86 4886f70d 
+    01090216 0d36322e 3231382e 35302e31 37303082 0222300d 06092a86 4886f70d 
+    01010105 00038202 0f003082 020a0282 020100d5 5643cf23 9b207070 fb51ab7f 
+    6bb640a4 ac8e985d 323228fe fe34c608 bf1f2e0a 1fc70c19 9fd7f0dd c96e77c0 
+    6ee7ff83 207ade35 0029d109 83790ca9 b51f3d16 147c5336 dcce7ad0 f7e3f797 
+    fda02bd8 432dd78c fda35f52 f028a884 bfc33bd3 43f65d41 84bc0b51 704eea0b 
+    c4e991df f67bfe4a 0e8edf74 15daa357 668271e6 623ec3cc efe1dea8 252acdd6 
+    5ae678e5 15f61d37 49fa2771 0d191ab4 6fd548eb bc2a2d27 b8d0629f 8e5584fb 
+    0b919ed7 2e1f8ca7 3c8aa888 0eb163ca e47be5ca 178ef226 c6ea1ab6 0fef11e7 
+    b034fa8d 47f687cd 7f3a8b19 b954493b 7277b465 70273719 f74faec3 a17c6175 
+    7b336695 3671f04c 9ad2e570 c568a19d 55484da8 d349eac3 f4553eaf 3434392b 
+    ee002e0c 9d9164e1 ebbe2b7b c20d0e79 4b29528e c762e5a6 0ebc798c 6e3503e4 
+    34effba8 82fb71eb 3e263daa 5ebddec3 663a5b41 f6e6f02b 9278c21b cf93d997 
+    9e97395a 250618f8 da18fea7 9854208b 3ae1d07c bf0cb9d6 81db3bdc d41a432b 
+    a6d8dc07 ebccb8a4 b6a55833 1f6dbdf4 ec28a23c 08be516b 61842bea 15822233 
+    ecd462c8 463967a1 53f14c47 16a7bc25 f2139b40 32fddbb6 39fd1226 e0bd0f6f 
+    31cf666d 8a0d1932 fe51e452 a209e3de 8010a35f 81e4ec4a 144d90b7 0b518946 
+    5da4e41f f0b7f72b 9c1a0f3f 22605cbf 922e38a1 233e3df8 89205db2 ee2d898f 
+    20010690 83fb65c1 0646e17c 8d3669b4 7c98b102 03010001 300d0609 2a864886 
+    f70d0101 0b050003 82020100 59142dfc 0924f7db b8de9034 8d33d745 b598aa57 
+    739ed899 c9f99cad 26b5251a 987850d7 5873fc11 9f9aa937 c17633c1 ae06cd4f 
+    b2c2e68f fc507041 aeb9e5fc bee8e96d ba2fc9c7 2cf9efc2 18d6bf5d 520e9661 
+    248f7bb0 76d9646b f940de86 468c8b84 d1a2dbc3 109cc2ec 3209250e fe8a8307 
+    8bae54e7 6af0dd77 1adb2fc7 29e86f01 025aed9e 8c7fcfc5 36d9c8c4 5e262a68 
+    f0c07b0c 8064f3b4 71eedaec 54267904 3733387b 703ba814 0fcbe013 f22503a9 
+    b324b5c9 3c284060 d12ca813 a7096d39 3b1e021e e7227f1f f149cbe5 ad738d7e 
+    3c4c6c8c d1748053 13b2829b e3d8d8a9 ef1debda 7ef5652f 3c7962d3 7d85a3f6 
+    f5a04bae f7b80e69 a38af194 651ba90c f0fbdc18 494f86ff f02edfed 51299b8c 
+    0a9adf7e c66e742b d70327cb b5aef8c6 f3d5a1e5 a26f0e61 8445c7b2 e7a9ccc8 
+    48605937 e40f6947 37839980 7ed9f226 4d258824 8bc191b4 7aa84139 0408df19 
+    5a0d9f55 082aac93 999f4b13 d8daa623 03576ced ddfa0da2 beeb1df5 fb47e4fd 
+    2a546f75 92f9aa65 af7183c5 8fe0743d 012fdd15 9d8d1c64 b3f68bef c0ca389f 
+    2fa6b3e3 87990f62 1925ac3f e51f7000 49efe8ed ba37a14e 7651812e fe09c856 
+    8dc6e946 9c8d2128 7753c734 e52040a5 2b8bd1d6 4b54870d 1f2e3439 b1b667a4 
+    91a28fe9 ff0be385 d9172a17 656caf2f d8efe3cc 6c83c10f 014a65cd 9eb2c0f3 
+    2271cd2a 7438e5fd 72ef8bcc
+  quit
+crypto ca certificate chain ntslab_jeitler_cc
+ certificate e0faac44c18dda0f1a369bb8a3c6ba7b
+    30820671 30820459 a0030201 02021100 e0faac44 c18dda0f 1a369bb8 a3c6ba7b 
+    300d0609 2a864886 f70d0101 0c050030 4b310b30 09060355 04061302 41543110 
+    300e0603 55040a13 075a6572 6f53534c 312a3028 06035504 0313215a 65726f53 
+    534c2052 53412044 6f6d6169 6e205365 63757265 20536974 65204341 301e170d 
+    32323037 31303030 30303030 5a170d32 32313030 38323335 3935395a 301c311a 
+    30180603 55040313 116c6162 6e74732e 6a656974 6c65722e 63633082 0122300d 
+    06092a86 4886f70d 01010105 00038201 0f003082 010a0282 010100b1 38a716fa 
+    dfe665d8 0e27fb49 a07a3cec e9bbd7b0 63af7f2e 8b197eea b2da26a8 4c0c8156 
+    08bc7703 26a837eb dcbaa822 7c9c446c 8a8754ac b2dab45c 552cd197 932cf091 
+    79fe36e3 24db7035 80c17f21 94bbc119 d86fa29a 9b566c82 30c87b74 1a9d4e65 
+    5ef5e853 471f2744 55d349b6 1baceadf 53c00048 7645a81d 507b190b 82e2ee25 
+    2de5a1c1 9da4364c 854802d2 213f5866 f6cae45a 454c39b9 de5c5894 fe482e30 
+    353f744d cf4c98b8 05a771fd e5642840 311fc3e2 ebeed588 21db6f7b a966c826 
+    2e55ab58 dff1821f 468a40ab 87dded9a 3c3a6eda 928ebde3 efc83d61 489546fd 
+    f7d3e18e c3e96a96 3df29fc1 2347d369 3ed3f475 823af3d1 5ab9a302 03010001 
+    a382027d 30820279 301f0603 551d2304 18301680 14c8d978 68a2d919 68d53d72 
+    de5f0a3e dcb58686 a6301d06 03551d0e 04160414 5d86f21f 0cce7d59 537beccc 
+    5577b83a 907435bd 300e0603 551d0f01 01ff0404 030205a0 300c0603 551d1301 
+    01ff0402 3000301d 0603551d 25041630 1406082b 06010505 07030106 082b0601 
+    05050703 02304906 03551d20 04423040 3034060b 2b060104 01b23101 02024e30 
+    25302306 082b0601 05050702 01161768 74747073 3a2f2f73 65637469 676f2e63 
+    6f6d2f43 50533008 06066781 0c010201 30818806 082b0601 05050701 01047c30 
+    7a304b06 082b0601 05050730 02863f68 7474703a 2f2f7a65 726f7373 6c2e6372 
+    742e7365 63746967 6f2e636f 6d2f5a65 726f5353 4c525341 446f6d61 696e5365 
+    63757265 53697465 43412e63 7274302b 06082b06 01050507 3001861f 68747470 
+    3a2f2f7a 65726f73 736c2e6f 6373702e 73656374 69676f2e 636f6d30 82010406 
+    0a2b0601 0401d679 02040204 81f50481 f200f000 770046a5 55eb75fa 912030b5 
+    a28969f4 f37d112c 4174befd 49b885ab f2fc70fe 6d470000 0181e70b 723b0000 
+    04030048 30460221 00a8276e 9d70a522 f7740de8 be1fdfa7 7da72d9e 2fa565af 
+    5f263b5f 1d55c176 8b022100 e143bda9 0b6d7653 798e8216 27cc89b3 1d768718 
+    19af8f43 43d7a09b 8b89a406 00750041 c8cab1df 22464a10 c6a13a09 42875e4e 
+    318b1b03 ebeb4bc7 68f09062 9606f600 000181e7 0b720400 00040300 46304402 
+    20035f00 c986a914 64259bcb 7da21c1e 645397a4 b1911798 9734032a 28b2cd9d 
+    24022033 aa0206ed a7d8a5bc 9e12e027 f818ade9 4da5f6b6 01057214 2bfd3b73 
+    8b145e30 1c060355 1d110415 30138211 6c61626e 74732e6a 6569746c 65722e63 
+    63300d06 092a8648 86f70d01 010c0500 03820201 0005a96e bb885f71 e2b1b2a9 
+    81c0fe91 adc42fe5 c590726d 386b76e0 74222433 db0fe13e a57bacc5 5039da1c 
+    9e47658b 502c7ac0 7c9303c0 5ed7d2ea 400b4732 0f3b22da 228a87d0 c28c3f2a 
+    1ec5841e 096d5d0d 3a3ee26e 0818f7b4 5994d794 fee6665b 75ee9033 fc5f9873 
+    a819496b 83c7be43 fb7733dd bb64962c 48a4ba30 89795687 16ec403d 673b762c 
+    08062337 9f0052dd 2e0c4544 a5e43a50 97624820 c5bf4ec9 9e88879c c3df4c2e 
+    5d10a2fd 8db058c3 6935d2c3 7d2b3fb5 495457cb 3803120c 4361c3ed 9c8dff1f 
+    92f05823 d0513cca adb2f19f b0414970 b89adbd4 46a85d1d a0bc63d6 a2b062d1 
+    73222ad7 1b73f4e8 a3336144 ba40a8e3 78032406 a86f63c9 4430ae65 f5a41bfc 
+    30a4adb8 553e329b 5fe9da61 26279b52 a3db4352 541cb05b 119802a4 35e71ee0 
+    9d114a2b d7d03798 c3ae002e 63303abb fb970d52 c5e3c467 12662d3d 984cf470 
+    aeec0fc7 aae5b4c5 b4cc7da4 bfc33606 f27249a5 b8f0a0fa 005b05d6 0b4c784f 
+    1180855b 617c51d0 5ea450cd 7c8cc1d4 7c0a0333 c443178c de834f95 60369b70 
+    a50b82f2 d141024f 9715ef07 65f71f6e f10b8610 1b9f1761 e75580e9 b6c7a4e7 
+    2bbb01a4 0bdd49e4 262e49b7 2ee19039 f0166748 c67da239 cde2f433 4c66bdcc 
+    fa78da67 caac2af8 ee325c90 56fe9db8 7b7fdd9e 14d5df64 9b41c2f3 b914c502 
+    5a00deea 3f877415 3fae5f78 12a2b1bf fc5adfcd 02
+  quit
+ certificate ca 6c55abdbd00792c79d070cd8119ed6bf
+    308206d5 308204bd a0030201 0202106c 55abdbd0 0792c79d 070cd811 9ed6bf30 
+    0d06092a 864886f7 0d01010c 05003081 88310b30 09060355 04061302 55533113 
+    30110603 55040813 0a4e6577 204a6572 73657931 14301206 03550407 130b4a65 
+    72736579 20436974 79311e30 1c060355 040a1315 54686520 55534552 54525553 
+    54204e65 74776f72 6b312e30 2c060355 04031325 55534552 54727573 74205253 
+    41204365 72746966 69636174 696f6e20 41757468 6f726974 79301e17 0d323030 
+    31333030 30303030 305a170d 33303031 32393233 35393539 5a304b31 0b300906 
+    03550406 13024154 3110300e 06035504 0a13075a 65726f53 534c312a 30280603 
+    55040313 215a6572 6f53534c 20525341 20446f6d 61696e20 53656375 72652053 
+    69746520 43413082 0222300d 06092a86 4886f70d 01010105 00038202 0f003082 
+    020a0282 02010086 69737ea3 b531d823 e16ddda4 13d35415 f502ebdc 0321b57e 
+    5d1d527c 3f31eb9e 096cd159 385e677e 4b568f75 90b2370c 355a64a5 be4c102c 
+    2418c46d 898cc1c5 924d6602 839df7e1 2174f9cb 4302c171 b17fab4c 387d912a 
+    c6ff89a9 e8e4a1b9 b2da1085 09899a38 b7cef74e e49dd168 f90d6b77 0eda401b 
+    c4f7e65f effb1acd f2e6fc3d 24a85f95 64830fa3 59fe0a42 d36f5052 c3abc985 
+    5a15273c bea31c00 035e9bec e254cd63 03adc7dc 90b5ba71 c12b7b40 9635f880 
+    ab991241 e81b8a46 dfe37c32 45f49b1c 4505651c 8c5074a0 0997ba1a 5675e00e 
+    4aad936a 9d75dde4 0835ddef 882ff35d c6f75cfb 0a3b06c8 9f77a092 25352dd4 
+    8056c3e9 5e7824c8 19deb4a6 a2d61bcf df286715 fb30a6ed 0a6d5a27 fabe853b 
+    f660ad72 331ae77d c89e2a63 9805b143 8675b93b a44c03bd 377412bd da3e9744 
+    dd84b6d2 e442eba3 660cbe8d 744ab5a5 8c22590d 9162663a 21e612b4 27807bed 
+    88d90872 326e9aad 5d7455f8 89a4c8e3 46bace0b c806dc45 783b3645 f71a1fbd 
+    deafb72d 35452a81 04f9ac58 0984c985 c7beab42 00793995 24a1d6f9 9367b1ec 
+    ff86bb82 7ce9b4b5 e74f7852 e61c574f 6155e927 99387913 1f4204a8 a92d2d96 
+    db02816a 47fe6956 2734253a 4b49c04a ab76c6b6 69182d6f eefe8386 e7a9cb22 
+    6d9f7a92 5763e806 25394aa9 7e680469 c1489b40 c1a6e388 23c8d0ea 0e5569f9 
+    284b4255 07f71f02 03010001 a3820175 30820171 301f0603 551d2304 18301680 
+    145379bf 5aaa2b4a cf5480e1 d89bc09d f2b20366 cb301d06 03551d0e 04160414 
+    c8d97868 a2d91968 d53d72de 5f0a3edc b58686a6 300e0603 551d0f01 01ff0404 
+    03020186 30120603 551d1301 01ff0408 30060101 ff020100 301d0603 551d2504 
+    16301406 082b0601 05050703 0106082b 06010505 07030230 22060355 1d20041b 
+    3019300d 060b2b06 010401b2 31010202 4e300806 0667810c 01020130 50060355 
+    1d1f0449 30473045 a043a041 863f6874 74703a2f 2f63726c 2e757365 72747275 
+    73742e63 6f6d2f55 53455254 72757374 52534143 65727469 66696361 74696f6e 
+    41757468 6f726974 792e6372 6c307606 082b0601 05050701 01046a30 68303f06 
+    082b0601 05050730 02863368 7474703a 2f2f6372 742e7573 65727472 7573742e 
+    636f6d2f 55534552 54727573 74525341 41646454 72757374 43412e63 72743025 
+    06082b06 01050507 30018619 68747470 3a2f2f6f 6373702e 75736572 74727573 
+    742e636f 6d300d06 092a8648 86f70d01 010c0500 03820201 00150f0a 08cd00d5 
+    7ab713d1 e62a6630 4d27c54d 5b054595 03ad6444 6a9f9896 9c455a2d 965dcf19 
+    5bbf3d85 c7413150 db941206 24215338 62870a90 243b84ee 67a22728 abf0eb11 
+    81f922e3 5cb96d48 f09259f4 32ee0757 d8bc81e5 676246e3 a88d6d52 80df2800 
+    133f3a46 f0d096dd 82e3de2a a8f548b5 18ebcfd6 25244193 d03aedb7 2029ab46 
+    0b143cdf f99d6990 c861edcf bb7d7789 aa62217c 9a5db8a7 3c1c4424 61041285 
+    e9f8dba4 b71f426b 2006ca70 10a2c981 6e3a17f2 beec1508 50df16fa e30038dd 
+    e235f5b9 05ddd7ad 48c8545b 9bcf6cd8 e8f9a14d 700d8cf9 b31fa1a0 2ba1ea54 
+    acfbfb8f b96a2622 adf2d460 c535a7d6 f8bb0705 4d7a950a 39436ca1 db995a42 
+    c2918323 e63291c9 f7c79d9b acb6b075 1a6c04a6 447c6f1a 2bb0c04d b9683534 
+    d9201e7a 9c88989d 82cc1f34 606ed6c6 5ca71ea3 61a44ef1 7c2ecfcd 094b8267 
+    c41dd53e b4715e41 acd1427a c5916d96 92a44622 aedc2919 f2ca9be3 3cc9237a 
+    257d9517 4033d7d2 26fb01de cbd4baed 5ca081b5 c71235c9 e82818ce 2be503f8 
+    446215bd 86a223be 82d1d8e8 49b43f76 42145174 2e07c00b e63c87df 88370596 
+    9a5f2be9 9a75788a 5a693175 409c0606 38de755a 127a5b4c 4d74d270 cd801265 
+    81feb660 9623e37a d06bf634 d3061f03 19edef5b 5e0cd409 91f915a0 450c6479 
+    4bd556a8 707bdd0f 8ec8856f 21b29871 2736c3f6 92b85286 48
+  quit
+telnet timeout 5
+ssh stricthostkeycheck
+ssh timeout 20
+ssh version 2
+ssh cipher encryption all
+ssh cipher integrity all
+ssh key-exchange group dh-group14-sha1
+ssh 0.0.0.0 0.0.0.0 inside
+ssh 193.109.88.0 255.255.255.0 outside
+ssh 185.119.119.174 255.255.255.255 outside
+console timeout 0
+management-access inside
+
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ssl server-version tlsv1.2
+ssl client-version tlsv1.2
+ssl cipher default fips
+ssl cipher tlsv1 fips
+ssl cipher tlsv1.1 fips
+ssl cipher tlsv1.2 custom "ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA256"
+ssl cipher dtlsv1 custom "DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:AES256-SHA"
+ssl ecdh-group group20
+ssl trust-point ntslab_jeitler_cc outside
+webvpn
+ enable outside
+ http-headers
+  hsts-server
+   enable
+   max-age 31536000
+   include-sub-domains
+   no preload
+  hsts-client
+   enable
+  x-content-type-options
+  x-xss-protection
+  content-security-policy
+ anyconnect image disk0:/anyconnect-macos-4.10.05111-webdeploy-k9.pkg 1
+ anyconnect image disk0:/anyconnect-win-4.10.05111-webdeploy-k9.pkg 2
+ anyconnect enable
+ keepout "Portal not available."
+ cache
+  disable
+ error-recovery disable
+group-policy GRPP-ANYC-NTS internal
+group-policy GRPP-ANYC-NTS attributes
+ dns-server value 172.20.80.50
+ vpn-idle-timeout 30
+ vpn-session-timeout 1440
+ vpn-tunnel-protocol ikev2 ssl-client 
+ split-tunnel-policy excludespecified
+ split-tunnel-network-list value ACL-LOCAL-LAN-ACCESS
+ default-domain value internetworks.at
+ address-pools value POOL-VPN-NTS
+ webvpn
+  anyconnect mtu 1200
+  anyconnect ask none default webvpn
+dynamic-access-policy-record DfltAccessPolicy
+username saskia password geheim123!  privilege 0
+tunnel-group TUGRP-ANYC-NTS type remote-access
+tunnel-group TUGRP-ANYC-NTS general-attributes
+ default-group-policy GRPP-ANYC-NTS
+tunnel-group TUGRP-ANYC-NTS webvpn-attributes
+ group-url https://62.218.50.170/nts enable
+ group-url https://62.218.50.170/tra enable
+ group-url https://labnts.jeitler.cc/nts enable
+ group-url https://labnts.jeitler.cc/tra enable
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum client auto
+  message-length maximum 4096
+  no tcp-inspection
+policy-map global_policy
+ class inspection_default
+  inspect ftp 
+  inspect h323 h225 
+  inspect h323 ras 
+  inspect ip-options 
+  inspect netbios 
+  inspect rsh 
+  inspect rtsp 
+  inspect skinny 
+  inspect esmtp 
+  inspect sqlnet 
+  inspect sunrpc 
+  inspect tftp 
+  inspect sip  
+  inspect xdmcp 
+  inspect dns preset_dns_map 
+  inspect icmp 
+  inspect icmp error 
+ class class-default
+  user-statistics accounting
+
+!
+service-policy global_policy global
+prompt hostname context 
+no call-home reporting anonymous
+   

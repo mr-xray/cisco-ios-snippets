@@ -1,0 +1,39 @@
+! A-SWC-001
+spanning-tree mode rapid-pvst 
+spanning-tree vlan 2 priority 0
+spanning-tree vlan 3 priority 0
+spanning-tree vlan 4 priority 0
+spanning-tree vlan 5 priority 0
+spanning-tree vlan 6 priority 0
+spanning-tree vlan 200 priority 0
+spanning-tree vlan 254 priority 0
+
+! A-SWC-002
+spanning-tree mode rapid-pvst
+spanning-tree vlan 2 priority 4096
+spanning-tree vlan 3 priority 4096
+spanning-tree vlan 4 priority 4096
+spanning-tree vlan 5 priority 4096
+spanning-tree vlan 6 priority 4096
+spanning-tree vlan 200 priority 4096
+spanning-tree vlan 254 priority 4096
+
+! B-SWC-001
+spanning-tree mode rapid-pvst 
+spanning-tree vlan 2 priority 0
+spanning-tree vlan 3 priority 0
+spanning-tree vlan 4 priority 0
+spanning-tree vlan 5 priority 0
+spanning-tree vlan 6 priority 0
+spanning-tree vlan 200 priority 0
+spanning-tree vlan 254 priority 0
+
+! B-SWC-002
+spanning-tree mode rapid-pvst
+spanning-tree vlan 2 priority 4096
+spanning-tree vlan 3 priority 4096
+spanning-tree vlan 4 priority 4096
+spanning-tree vlan 5 priority 4096
+spanning-tree vlan 6 priority 4096
+spanning-tree vlan 200 priority 4096
+spanning-tree vlan 254 priority 4096
